@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lightbox</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="lightbox.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <span class="logo"><a href="#"><img src="./img/codes.svg" alt="CODE/S" draggable="false"></a></span>
+      <nav>
+        <ul>
+          <li><a href="#example">Example</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="#contacts">Contacts</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="container mt-100">
+    <h1>Лайтбокс на чистому JavaScript</h1>
+    <p> Лайтбокс — це інструмент для перегляду зображень у збільшеному вигляді, який відкривається поверх основного
+      вмісту сторінки. Це популярна функція, яку використовують для галерей, слайдерів або простого перегляду окремих
+      зображень у зручному форматі.
+    </p>
+    <div class="avatar">
+      <a href="https://github.com/andreyk1n"><img src="./img/avatar.jpg" alt="avatar"></a>
+      <div class="avatar__line"></div>
+    </div>
+    <h2 id="example">Як це працює?</h2>
+    <p>
+      Лайтбокс складається з декількох ключових елементів:
+    </p>
+    <ul>
+      <li><strong>Контейнер зображень</strong> — група зображень, які можна переглядати через лайтбокс.</li>
+      <li><strong>Модальне вікно</strong> — це невидимий спочатку елемент, який з'являється при натисканні на
+        зображення, і показує його у збільшеному вигляді.</li>
+      <li><strong>Навігація</strong> — кнопки для перемикання між зображеннями, якщо їх кілька в групі.</li>
+      <li><strong>Закриття лайтбоксу</strong> — можливість закрити модальне вікно, натиснувши на кнопку "хрестик" або
+        клікаючи поза зображенням.</li>
+    </ul>
+    <p>
+      Коли користувач натискає на зображення, лайтбокс стає видимим і відображає відповідне зображення. Також є
+      можливість переключати зображення за допомогою стрілок або клавіатури. Кожного разу, коли завантажується нове
+      зображення, лічильник показує поточний індекс зображення, наприклад, "1/5", "2/5" тощо.
+    </p>
+    <blockquote>*Також передбачена можливість того, що на сторінці може бути декілька лайбтокс контейнерів. **Для
+      стилізації кожного лайтбоксу рекомендується задавати унікальні класи.</blockquote>
+    <h3>Перша група лайтбокс зображень</h3>
+    <div data-lightbox-container class="lightbox__container">
+      <img data-lightbox-item src="./img/heber-davis-OWz1mcjdoKQ-unsplash.jpg" alt="Image 1">
+      <img data-lightbox-item src="./img/maxim-tolchinskiy-913aM5bLFIg-unsplash.jpg" alt="Image 2">
+      <img data-lightbox-item src="./img/nick-design-mY7yZiJL_aQ-unsplash.jpg" alt="Image 3">
+    </div>
+
+    <h3>Друга група лайтбокс зображень</h3>
+    <div data-lightbox-container class="lightbox__container">
+      <img data-lightbox-item src="./img/sheng-hu-0H18vkgrs2Q-unsplash.jpg" alt="Image 4">
+      <img data-lightbox-item src="./img/willian-justen-de-vasconcellos-m9cupOWnpro-unsplash.jpg" alt="Image 5">
+      <img data-lightbox-item src="./img/maxim-tolchinskiy-913aM5bLFIg-unsplash.jpg" alt="Image 6">
+    </div>
+
+    <div class="lightbox" id="lightbox">
+      <span class="lightbox__close">&times;</span>
+      <span class="lightbox__counter" id="lightboxCounter">1/3</span>
+      <img class="lightbox__img" src="" alt="Lightbox Image">
+      <a class="lightbox__prev">&#10094;</a>
+      <a class="lightbox__next">&#10095;</a>
+    </div>
+
+    <h2 id="usage">Приклад використання</h2>
+    <h3>HTML:</h3>
+    <pre><code>
+    &lt;div data-lightbox-container&gt;
+      &lt;img data-lightbox-item src=&quot;image1.jpg&quot; alt=&quot;Image 1&quot;&gt;
+      &lt;img data-lightbox-item src=&quot;image2.jpg&quot; alt=&quot;Image 2&quot;&gt;
+    &lt;/div&gt;
+    
+    &lt;div data-lightbox-container&gt;
+      &lt;img data-lightbox-item src=&quot;image3.jpg&quot; alt=&quot;Image 3&quot;&gt;
+      &lt;img data-lightbox-item src=&quot;image4.jpg&quot; alt=&quot;Image 4&quot;&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;lightbox&quot; id=&quot;lightbox&quot;&gt;  <--- Візуал лайтбокса, кнопки.
+      &lt;span class=&quot;lightbox__close&quot;&gt;&amp;times;&lt;/span&gt;
+      &lt;span class=&quot;lightbox__counter&quot; id=&quot;lightboxCounter&quot;&gt;1/2&lt;/span&gt;
+      &lt;img class=&quot;lightbox__img&quot;&gt;
+      &lt;a class=&quot;lightbox__prev&quot;&gt;&amp;#10094;&lt;/a&gt;
+      &lt;a class=&quot;lightbox__next&quot;&gt;&amp;#10095;&lt;/a&gt;
+    &lt;/div&gt;
+    </code></pre>
+    
+    <h3>CSS:</h3>
+    <pre><code>
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+      
+      .lightbox__img {
+        width: 80%;
+        height: 100%;
+        object-fit: cover;
+        max-width: 80%;
+        max-height: 80%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      
+      .lightbox__close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        font-size: 40px;
+        color: white;
+        cursor: pointer;
+      }
+      
+      .lightbox__prev, .lightbox__next {
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        width: auto;
+        padding: 16px;
+        color: white;
+        font-weight: bold;
+        font-size: 30px;
+        transition: 0.3s;
+      }
+      
+      .lightbox__prev {
+        left: 0;
+      }
+      
+      .lightbox__next {
+        right: 0;
+      }
+      
+    
+      .lightbox__counter {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 18px;
+        color: white;
+        z-index: 1001;
+        cursor: pointer;
+      }
+    
+      .lightbox__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+    
+      /* change for your need's */
+      .lightbox__container img {
+        width: 300px;
+        height: 250px;
+        cursor: pointer;
+        object-fit: cover;
+      }
+      @media (max-width: 768px) {
+        .lightbox__container {
+          justify-content: center;
+        }
+    
+          /* change for your need's */
+        .lightbox__container img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    </code></pre>
+
+    <h3>Javascript:</h3>
+    <pre><code>
+      document.addEventListener('DOMContentLoaded', () => {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = lightbox.querySelector('.lightbox__img');
+        const lightboxCounter = lightbox.querySelector('#lightboxCounter');
+        const closeBtn = lightbox.querySelector('.lightbox__close');
+        const prevBtn = lightbox.querySelector('.lightbox__prev');
+        const nextBtn = lightbox.querySelector('.lightbox__next');
+        let currentImages = [], currentIndex = 0;
+        let isLightboxOpen = false; 
+      
+        document.querySelectorAll('[data-lightbox-item]').forEach(item => {
+          item.addEventListener('click', () => {
+            currentImages = Array.from(item.closest('[data-lightbox-container]').querySelectorAll('[data-lightbox-item]'));
+            currentIndex = currentImages.indexOf(item);
+            openLightbox(currentIndex);
+          });
+        });
+      
+        [closeBtn, lightbox].forEach(el => el.addEventListener('click', e => {
+          if (e.target === lightbox || e.target === closeBtn) closeLightbox();
+        }));
+      
+        nextBtn.addEventListener('click', () => {
+          if (isLightboxOpen) changeImage(1);
+        });
+        prevBtn.addEventListener('click', () => {
+          if (isLightboxOpen) changeImage(-1);
+        });
+        
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape') closeLightbox();
+          if (isLightboxOpen) {
+            if (e.key === 'ArrowRight') changeImage(1);
+            if (e.key === 'ArrowLeft') changeImage(-1);
+          }
+        });
+      
+        const openLightbox = index => {
+          lightboxImg.src = currentImages[index].src;
+          lightboxCounter.textContent = `${index + 1}/${currentImages.length}`;
+          lightbox.style.display = 'block';
+          isLightboxOpen = true; 
+        };
+      
+        const closeLightbox = () => {
+          lightbox.style.display = 'none';
+          isLightboxOpen = false; 
+        };
+      
+        const changeImage = direction => {
+          currentIndex = (currentIndex + direction + currentImages.length) % currentImages.length;
+          openLightbox(currentIndex);
+        };
+      });         
+    </code></pre>
+
+    <footer class="footer" id="contacts">
+      <div class="container">
+        <span class="footer__line"></span>
+        <div class="footer__nav">
+          <a href="#" class="footer__logo">
+            <img src="./img/codes.svg" alt="CODE/S">
+          </a>
+          <nav>
+            <ul>
+              <li><a href="https://github.com/andreyk1n">Github</a></li>
+              <li><a href="https://t.me/frontForge">Telegram</a></li>
+              <li><a href="mailto:andrii.panasiuk2002@gmail.com">Email</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+
+
+
+  <script src="./lighbox.js"></script>
+</body>
+
+</html>
